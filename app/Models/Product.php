@@ -19,7 +19,6 @@ class Product extends Model
         'created_by'
     ];
 
-    // Product Relationships
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -47,10 +46,9 @@ class Product extends Model
 
     public function categories()
     {
-        return $this->hasMany(ProductCategory::class);
+        return $this->belongsToMany(Category::class, 'product_categories');
     }
 
-    // Other Relationships
     public function wishlist()
     {
         return $this->hasMany(Wishlist::class);
@@ -61,7 +59,6 @@ class Product extends Model
         return $this->hasMany(Cart::class);
     }
 
-    // Single Attributes
     public function userWishlist()
     {
         return $this->hasOne(Wishlist::class)->where('user_id', Auth::id());

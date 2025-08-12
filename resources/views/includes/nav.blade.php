@@ -13,10 +13,13 @@
             <span class="lead fs-6 text-white">
                 Hi, there {{ Auth::user()->name }}
             </span>
-            <a href="{{ route('wishlist.index') }}" class="text-white">
+            <a href="{{ route('orders.index') }}">
+                <i class="bi bi-box2-fill fs-4 text-primary"></i>
+            </a>
+            <a href="{{ route('wishlist.index') }}">
                 <i class="bi bi-suit-heart-fill fs-4 text-primary"></i>
             </a>
-            <a href="{{ route('user.index') }}" class="text-white">
+            <a href="{{ route('user.index') }}">
                 <i class="bi bi-person-fill fs-3 text-primary"></i>
             </a>
         </div>

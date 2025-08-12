@@ -21,4 +21,13 @@ class WishlistPolicy
     {
         return $wishlist->user_id === $user->id;
     }
+
+    public function clear(User $user): bool
+    {
+        if (Auth::guest()) {
+            return false;
+        }
+
+        return $user->id === Auth::id();
+    }
 }

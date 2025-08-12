@@ -22,8 +22,51 @@
                 </ul>
             </div>
             <div class="col-6 col-md-2 mb-3">
-                <h5>Categories</h5>
+                <h5>Sorting</h5>
                 <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="{{ 
+                                route('products.index', 
+                                array_merge(request()->all(), ['sort' => null])) 
+                                }}"
+                            class="nav-link p-0 text-body-secondary">Relevance</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ 
+                                route('products.index', 
+                                array_merge(request()->all(), ['sort' => 'latest'])) 
+                                }}" 
+                                class="nav-link p-0 text-body-secondary">Latest</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ 
+                            route('products.index', 
+                            array_merge(request()->all(), ['sort' => 'top_sales'])) 
+                            }}" 
+                            class="nav-link p-0 text-body-secondary">Top Sales</a>
+                        </li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ 
+                            route('products.index', 
+                            array_merge(request()->all(), ['sort' => 'high_ratings'])) 
+                            }}" 
+                            class="nav-link p-0 text-body-secondary">High Ratings</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ 
+                            route('products.index', 
+                            array_merge(request()->all(), ['sort' => 'price_low'])) 
+                            }}" 
+                            class="nav-link p-0 text-body-secondary">Price: Low to High</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ 
+                            route('products.index', 
+                            array_merge(request()->all(), ['sort' => 'price_high'])) 
+                            }}"
+                            class="nav-link p-0 text-body-secondary">Price: High to Low</a>
+                    </li>
+                    
                 </ul>
             </div>
             <div class="col-6 col-md-2 mb-3">

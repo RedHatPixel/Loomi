@@ -25,7 +25,7 @@
                             <div class="d-flex justify-content-center gap-2">
                                 @foreach ($chunk as $image)
                                     <img src="{{ asset('storage/products' . $image->image_path) }}"
-                                        onclick="changePrimaryImage(this.src)"
+                                        class="product-image"
                                         style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                                 @endforeach
                             </div>
@@ -68,7 +68,7 @@
             <div class="lead fs-6 d-flex flex-wrap gap-3 py-2">
                 <span class="d-flex gap-1 align-items-center">
                     <span class="me-1">
-                        {{  $avg = rtrim(rtrim(number_format($product->ratings->avg('stars'), 2), '0'), '.') }}
+                        {{ $avg = rtrim(rtrim(number_format($product->ratings_avg_stars, 2), '0'), '.') }}
                     </span>
                     @for ($i = 1; $i <= 5; $i++)
                         @if ($avg >= $i)
@@ -100,21 +100,21 @@
             </p>
 
             <div class="my-3">
-                @foreach ($categories as $category)
+                @foreach ($product->categories as $category)
                     <span class="badge bg-danger p-2 m-1">{{ $category->category }}</span>
                 @endforeach
             </div>
 
-            <div class="btn-group mt-4" role="group" aria-label="Quantity selector">
-                <button type="button" class="btn btn-outline-dark" onclick="changeQuantity(-1)">
+            <div class="btn-group mt-4">
+                <button type="button" class="btn btn-outline-dark buttonLeft">
                     <i class="bi bi-dash"></i>
                 </button>
-                <input type="number" name="quantity" id="quantityInput" 
-                        class="form-control text-center rounded-0 border-dark" 
+                <input type="number" name="quantity"
+                        class="form-control text-center rounded-0 border-dark quantityInput" 
                         value="1" min="1" max="{{ $product->quantity }}" 
-                        onchange="limitQuantity()"
-                        style="width: 100px;">
-                <button type="button" class="btn btn-outline-dark"  onclick="changeQuantity(1)">
+                        style="width: 100px;"
+                        data-hidden-selector=".hiddenInput">
+                <button type="button" class="btn btn-outline-dark buttonRight">
                     <i class="bi bi-plus"></i>
                 </button>
             </div>
@@ -123,15 +123,16 @@
                 <form method="POST" action="{{ route('cart.store') }}">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="quantity" id="quantityHiddenInput">
+                    <input type="hidden" name="quantity" class="hiddenInput">
                     <button type="submit" class="btn btn-primary text-white rounded-0">
                         <i class="bi bi-cart me-1"></i> Add to Cart
                     </button>
                 </form>
 
-                <form method="POST">
+                <form method="POST" action="{{ route('checkout.store') }}">
                     @csrf
-                    <input type="hidden" name="quantity" id="quantityHiddenInput">
+                    <input type="hidden" name="items[0][product_id]" value="{{ $product->id }}">
+                    <input type="hidden" name="items[0][quantity]" class="hiddenInput">
                     <button type="submit" class="btn btn-outline-primary rounded-0">
                         <i class="bi bi-bag me-1"></i> Buy Now
                     </button>

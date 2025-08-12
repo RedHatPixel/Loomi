@@ -17,3 +17,11 @@
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
+
+@if (session('info'))
+    <div class="alert alert-info alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow rounded-3 small" 
+        style="z-index: 9999; max-width: 500px; min-width: 350px;">
+        {{ session('info') }}
+        <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif

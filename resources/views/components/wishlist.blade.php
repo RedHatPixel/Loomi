@@ -1,6 +1,8 @@
 <tr>
     <td>
-        <a href="{{ route('products.show', $product) }}" class="d-flex align-items-center gap-4 text-decoration-none text-reset">
+        <a href="{{ route('products.show', $product) }}" 
+        class="d-flex align-items-center gap-4 text-decoration-none text-reset"
+        style="width: 300px;">
             @if($product->primaryImage)
                 <img src="{{ asset('storage/products' . $product->primaryImage->image_path) }}" 
                         alt="{{ $product->title }}" 
@@ -22,15 +24,7 @@
         </div>
     </td>
     <td>
-        <div class="d-flex gap-2" style="width: 200px;">
-            <form method="POST" action="{{ route('cart.store') }}">
-                @csrf
-                <button type="submit" class="btn btn-sm btn-outline-info">
-                    <i class="bi bi-cart"></i> Add to cart
-                </button>
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                <input type="hidden" name="quantity" value="1">
-            </form>
+        <div class="d-flex gap-2" style="width: 100px;">
             <form method="POST" action="{{ route('wishlist.destroy', $wishlist) }}">
                 @csrf
                 @method('DELETE')

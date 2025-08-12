@@ -44,4 +44,12 @@ class WishlistController extends Controller
         $wishlist->delete();
         return back()->with('success', 'Item removed from wishlist.');
     }
+
+    public function clear()
+    {
+        $userId = Auth::id();
+        Wishlist::where('user_id', $userId)->delete();
+
+        return redirect()->back()->with('success', 'All wishlist items deleted.');
+    }
 }

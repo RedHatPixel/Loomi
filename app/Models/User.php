@@ -28,4 +28,34 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function productRatings()
+    {
+        return $this->hasMany(ProductRating::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'created_by');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'user_categories');
+    }
 }

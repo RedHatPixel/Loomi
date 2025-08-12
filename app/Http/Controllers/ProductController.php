@@ -31,8 +31,10 @@ class ProductController extends Controller
         $sort = $validated['sort'] ?? null;
 
         // Filter product
-        $products = Product::with('primaryImage')
-            ->with('userWishlist')
+        $products = Product::with([
+            'primaryImage',
+            'userWishlist'
+        ])
             ->withAvg('ratings', 'stars')
             ->withSum('sales', 'quantity')
 
@@ -91,7 +93,7 @@ class ProductController extends Controller
         $categories = Category::all();
 
         // Get random available products
-        $featuredProducts = Product::with('primaryImage')->with('userWishlist')
+        $featuredProducts = Product::with(['primaryImage', 'userWishlist'])
             ->inRandomOrder()->take(12)->get();
 
         return view('product.index', compact('products', 'featuredProducts', 'categories'));
@@ -102,12 +104,19 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['images', 'creator', 'userWishlist']);
-        $product->loadSum('sales', 'quantity');
-        $categories = $product->categories()->with('category')->get()->pluck('category');
-        $ratings = $product->ratings()->latest()->paginate(10);
+        $product->load([
+            'images',
+            'primaryImage',
+            'userWishlist',
+            'categories',
+            'creator',
+        ])
+            ->loadAvg('ratings', 'stars')
+            ->loadSum('sales', 'quantity');
 
-        return view('product.show', compact('product', 'ratings', 'categories'));
+        $ratings = $product->ratings()->with('user')->latest()->paginate(10);
+
+        return view('product.show', compact('product', 'ratings'));
     }
 
     /**

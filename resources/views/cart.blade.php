@@ -14,13 +14,17 @@
         <p class="lead fs-6">Your cart is empty. Shop now to order.</p>
     @else
         <div class="d-flex align-items-center gap-2 mt-2">
-            <form method="POST">
+            <form method="POST" action="{{ route('checkout.store') }}">
                 @csrf
+                @foreach ($carts as $i => $cart)
+                    <input type="hidden" name="items[{{ $i }}][product_id]" value="{{ $cart->product->id }}">
+                    <input type="hidden" name="items[{{ $i }}][quantity]" value="{{ $cart->quantity }}">
+                @endforeach
                 <button type="submit" class="btn btn-sm btn-outline-info">
                     <i class="bi bi-bag"></i> Buy All
                 </button>
             </form>
-            <form method="POST">
+            <form method="POST" action="{{ route('cart.clear') }}">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-sm btn-outline-danger">
@@ -33,7 +37,7 @@
                 <thead class="table-primary border-primary fst-italic">
                     <tr>
                         <th scope="col">Product</th>
-                        <th scope="col">Price</th>
+                        <th scope="col">Total Price</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -74,4 +78,8 @@
 
 @section('footer')
 @include('includes.footer')
+@endsection
+
+@section('scripts')
+
 @endsection

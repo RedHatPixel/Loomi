@@ -33,10 +33,8 @@ class ProductSeeder extends Seeder
             $product->images()->saveMany($images);
 
             // Attaching categories
-            $categories = ProductCategory::factory()->count(rand(1, 10))->make([
-                'product_id' => $product->id
-            ]);
-            $product->categories()->saveMany($categories);
+            $categoryIds = Category::inRandomOrder()->take(rand(1, 10))->pluck('id');
+            $product->categories()->attach($categoryIds);
 
             // Product Ratings
             $ratingUsers = $users->random(rand(1, 10));

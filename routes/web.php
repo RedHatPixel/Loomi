@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -47,11 +49,21 @@ Route::prefix('/user')->middleware('auth')->controller(UserController::class)->g
     // User Views
     Route::get('/', 'index')->name('user.index');
     Route::get('/edit', 'edit')->name('user.edit');
-    Route::get('/orders', 'orders')->name('user.orders');
 });
 
-// Cart and Wishlist Routes
 Route::middleware('auth')->group(function () {
+
+    // Cart Routes
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::resource('/cart', CartController::class)->only(['index', 'store', 'update', 'destroy']);
+
+    // Wishlist Routes
+    Route::delete('/wishlist/clear', [WishlistController::class, 'clear'])->name('wishlist.clear');
     Route::resource('/wishlist', WishlistController::class)->only(['index', 'store', 'destroy']);
+
+    // Order Routes
+    Route::resource('/orders', OrderController::class)->only(['index', 'show', 'store', 'delete']);
+
+    // Checkout Routes
+    Route::resource('/checkout', CheckoutController::class)->only(['index', 'store']);
 });

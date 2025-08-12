@@ -1,5 +1,7 @@
-import "./wishlist.js";
+import "./quantityInput.js";
+import "./cart.js";
 
+// Alert dismissal
 const alertEl = document.querySelector(".alert-dismissible");
 if (alertEl) {
     setTimeout(() => {
@@ -8,53 +10,14 @@ if (alertEl) {
     }, 10000);
 }
 
+// Change primary image function
 function changePrimaryImage(change) {
     const mainImage = document.getElementById("mainImage");
     mainImage.src = change;
 }
 
-window.changePrimaryImage = changePrimaryImage;
-
-function changeQuantity(change) {
-    const min = parseInt(quantityInput.min) || 1;
-    const max = parseInt(quantityInput.max) || Infinity;
-
-    let current = parseInt(quantityInput.value) || min;
-    current += change;
-
-    if (current < min) current = min;
-    if (current > max) current = max;
-
-    quantityInput.value = current;
-    quantityHiddenInput.value = current;
-}
-
-function limitQuantity() {
-    const min = parseInt(quantityInput.min) || 1;
-    const max = parseInt(quantityInput.max) || Infinity;
-    let current = parseInt(quantityInput.value) || min;
-
-    if (current < min) current = min;
-    if (current > max) current = max;
-
-    quantityInput.value = current;
-    quantityHiddenInput.value = current;
-}
-
-window.changeQuantity = changeQuantity;
-window.limitQuantity = limitQuantity;
-
-const quantityInput = document.getElementById("quantityInput");
-const quantityHiddenInput = document.getElementById("quantityHiddenInput");
-
-if (quantityInput) {
-    quantityInput.addEventListener("input", () => {
-        quantityHiddenInput.value = quantityInput.value;
+document.querySelectorAll(".product-image").forEach((img) => {
+    img.addEventListener("click", function () {
+        changePrimaryImage(this.src);
     });
-}
-
-if (quantityHiddenInput) {
-    window.addEventListener("DOMContentLoaded", () => {
-        quantityHiddenInput.value = quantityInput.value;
-    });
-}
+});

@@ -27,11 +27,12 @@
                 <li><a class="dropdown-item" href="{{ route('user.index') }}">
                     <i class="bi bi-person-circle"></i> Profile
                 </a></li> 
-                <li><a class="dropdown-item" href="{{ route('user.orders') }}">
-                    <i class="bi bi-truck"></i> Orders
+                <li><a class="dropdown-item" href="{{ route('orders.index') }}">
+                    <i class="bi bi-box2"></i> Orders
                 </a></li> 
                 <li><a class="dropdown-item" href="{{ route('user.edit') }}">
-                    <i class="bi bi-pen"></i> Edit</a></li> 
+                    <i class="bi bi-pen"></i> Edit
+                </a></li> 
                 <li><hr class="dropdown-divider"></li> 
                 <li>
                     <form action="{{ route('logout') }}" method="POST">
