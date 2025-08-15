@@ -6,53 +6,57 @@
 @include('includes.profile')
 @endsection
 
-@section('content')
-<div style="min-height: 60vh">
-    <h2 class="lead text-start display-6 mt-4">My Cart</h2>
+@section('sidebar')
+@include('includes.user')
+@endsection
 
-    @if($carts->isEmpty())
-        <p class="lead fs-6">Your cart is empty. Shop now to order.</p>
-    @else
-        <div class="d-flex align-items-center gap-2 mt-2">
-            <form method="POST" action="{{ route('checkout.store') }}">
-                @csrf
-                @foreach ($carts as $i => $cart)
-                    <input type="hidden" name="items[{{ $i }}][product_id]" value="{{ $cart->product->id }}">
-                    <input type="hidden" name="items[{{ $i }}][quantity]" value="{{ $cart->quantity }}">
+@section('mainbar')
+<h2 class="lead text-start display-6 mt-4">My Cart</h2>
+
+@if($carts->isEmpty())
+    <p class="lead fs-6">Your cart is empty. Shop now to order.</p>
+@else
+    <div class="d-flex align-items-center gap-2 mt-2">
+        <form method="POST" action="{{ route('checkout.store') }}">
+            @csrf
+            @foreach ($carts as $i => $cart)
+                <input type="hidden" name="items[{{ $i }}][product_id]" value="{{ $cart->product->id }}">
+                <input type="hidden" name="items[{{ $i }}][quantity]" value="{{ $cart->quantity }}">
+            @endforeach
+            <button type="submit" class="btn btn-sm btn-outline-info">
+                <i class="bi bi-bag"></i> Buy All
+            </button>
+        </form>
+        <form method="POST" action="{{ route('cart.clear') }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i> Remove All
+            </button>
+        </form>
+    </div>
+    <div class="table-responsive border border-primary rounded-0 shadow-sm my-3">
+        <table class="table align-middle table-hover mb-0">
+            <thead class="table-primary border-primary fst-italic">
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody class="border-primary">
+                @foreach($carts as $cart)
+                    @php $product = $cart->product; @endphp
+                    @include('components.cart', ['product' => $product, 'cart' => $cart])
                 @endforeach
-                <button type="submit" class="btn btn-sm btn-outline-info">
-                    <i class="bi bi-bag"></i> Buy All
-                </button>
-            </form>
-            <form method="POST" action="{{ route('cart.clear') }}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-trash"></i> Remove All
-                </button>
-            </form>
-        </div>
-        <div class="table-responsive border border-primary rounded shadow-sm my-3">
-            <table class="table align-middle table-hover mb-0">
-                <thead class="table-primary border-primary fst-italic">
-                    <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col">Total Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="border-primary">
-                    @foreach($carts as $cart)
-                        @php $product = $cart->product; @endphp
-                        @include('components.cart', ['product' => $product, 'cart' => $cart])
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endif
-</div>
+            </tbody>
+        </table>
+    </div>
+@endif
+@endsection
 
+@section('content')
 <h2 class="lead text-start display-6 mt-5 mb-3">You may also like.</h2>
 @empty($featuredProducts)
     <p class="lead fs-6">Missing products.</p>

@@ -29,17 +29,23 @@ document.querySelectorAll(".quantityInput").forEach(function (quantityInput) {
         ? document.querySelectorAll(hiddenInputSelector)
         : null;
 
-    if (hiddenInputs) {
-        function changeHiddenInputsValue(change) {
-            hiddenInputs.forEach(function (hiddenInput) {
-                hiddenInput.value = change;
-            });
-        }
+    function changeHiddenInputsValue(change) {
+        if (!hiddenInputs) return;
 
-        quantityInput.addEventListener("input", function () {
-            changeHiddenInputsValue(value);
+        hiddenInputs.forEach(function (hiddenInput) {
+            hiddenInput.value = change;
         });
     }
+
+    changeHiddenInputsValue(quantityInput.value);
+
+    quantityInput.addEventListener("input", function () {
+        changeHiddenInputsValue(quantityInput.value);
+    });
+
+    quantityInput.addEventListener("change", function () {
+        changeHiddenInputsValue(quantityInput.value);
+    });
 
     if (leftBtn) {
         leftBtn.addEventListener("click", function () {
@@ -47,6 +53,7 @@ document.querySelectorAll(".quantityInput").forEach(function (quantityInput) {
             let value = parseInt(quantityInput.value) || min;
             value = Math.max(min, value - 1);
             quantityInput.value = value;
+            changeHiddenInputsValue(quantityInput.value);
         });
     }
 
@@ -57,6 +64,7 @@ document.querySelectorAll(".quantityInput").forEach(function (quantityInput) {
             let value = parseInt(quantityInput.value) || min;
             value = Math.min(max, value + 1);
             quantityInput.value = value;
+            changeHiddenInputsValue(quantityInput.value);
         });
     }
 });

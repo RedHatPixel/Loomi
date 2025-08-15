@@ -17,9 +17,4 @@ class UserController extends Controller
     {
         return view('user.edit');
     }
-
-    public function orders()
-    {
-        return view('user.orders');
-    }
 }

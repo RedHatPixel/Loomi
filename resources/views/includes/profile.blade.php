@@ -10,30 +10,36 @@
                 <li><a class="dropdown-item" href="{{ route('home') }}">Home</a></li>
                 <li><a class="dropdown-item" href="{{ route('products.index') }}">Products</a></li>
                 <li><a class="dropdown-item" href="#">Start Selling...</a></li> 
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{ route('wishlist.index') }}">
-                    <i class="bi bi-heart"></i> Wishlist
-                </a></li>
-                <li><a class="dropdown-item" href="{{ route('cart.index') }}">
-                    <i class="bi bi-cart"></i> Cart
-                </a></li>
             </ul> 
         </div> 
         <div class="dropdown"> 
             <a href="#" class="d-block text-light text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> 
-                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle"> 
+                <img src="
+                {{ Auth::user()->profile->avatar ? 
+                asset('storage/' . Auth::user()->profile->avatar) :
+                'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) }}" 
+                class="rounded-circle" 
+                width="32" height="32" 
+                alt="Avatar">
             </a> 
             <ul class="dropdown-menu text-small shadow"> 
                 <li><a class="dropdown-item" href="{{ route('user.index') }}">
                     <i class="bi bi-person-circle"></i> Profile
                 </a></li> 
                 <li><a class="dropdown-item" href="{{ route('orders.index') }}">
-                    <i class="bi bi-box2"></i> Orders
+                    <i class="bi bi-bag-check"></i> Orders
                 </a></li> 
-                <li><a class="dropdown-item" href="{{ route('user.edit') }}">
-                    <i class="bi bi-pen"></i> Edit
-                </a></li> 
+                
+                <li><a class="dropdown-item" href="{{ route('wishlist.index') }}">
+                    <i class="bi bi-heart"></i> Wishlist
+                </a></li>
+                <li><a class="dropdown-item" href="{{ route('cart.index') }}">
+                    <i class="bi bi-cart"></i> Cart
+                </a></li>
                 <li><hr class="dropdown-divider"></li> 
+                <li><a class="dropdown-item" href="{{ route('user.edit') }}">
+                    <i class="bi bi-pencil-square"></i> Edit Profile
+                </a></li> 
                 <li>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf

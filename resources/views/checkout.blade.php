@@ -19,48 +19,30 @@
     <div class="col-md-5 col-lg-4 order-md-last"> 
         <h4 class="d-flex justify-content-between align-items-center mb-3"> 
             <span class="text-primary">Your cart</span> 
-            <span class="badge bg-primary rounded-pill">3</span> 
+            <span class="badge bg-primary rounded-pill">{{ $collections['total_product'] }}</span> 
         </h4> 
         <ul class="list-group mb-3"> 
-            <li class="list-group-item d-flex justify-content-between lh-sm"> 
-                <div> 
-                    <h6 class="my-0">Product name</h6> 
-                    <small class="text-body-secondary">Brief description</small> 
-                </div> 
-                <span class="text-body-secondary">$12</span>
-            </li> 
-            <li class="list-group-item d-flex justify-content-between lh-sm"> 
-                <div> 
-                    <h6 class="my-0">Second product</h6> 
-                    <small class="text-body-secondary">Brief description</small> 
-                </div> 
-                <span class="text-body-secondary">$8</span> 
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-sm"> 
-                <div> 
-                    <h6 class="my-0">Third item</h6> 
-                    <small class="text-body-secondary">Brief description</small> 
-                </div>
-                <span class="text-body-secondary">$5</span>
-            </li> 
-            <li class="list-group-item d-flex justify-content-between bg-body-tertiary"> 
-                <div class="text-success"> 
-                    <h6 class="my-0">Promo code</h6> 
-                    <small>EXAMPLECODE</small> 
-                </div> 
-                <span class="text-success">−$5</span> 
-            </li> 
+            @foreach ($collections['products'] as $item)
+                <li class="list-group-item lh-sm"> 
+                    <div> 
+                        <h6 class="my-1 text-capitalize text-truncate text-ellipsis-2">
+                            <span class="badge bg-secondary rounded-pill">{{ $item['quantity'] }}</span> 
+                            {{ $item['product']->title }}
+                        </h6> 
+                        <small class="d-block text-body-secondary text-truncate text-ellipsis-2">
+                            {{ $item['product']->description }}
+                        </small> 
+                    </div> 
+                    <span class="d-block mt-2 text-success">
+                        ₱ {{ number_format($item['total_price'], 2) ?? '0' }}
+                    </span>
+                </li> 
+            @endforeach
             <li class="list-group-item d-flex justify-content-between"> 
-                <span>Total (USD)</span> 
-                <strong>$20</strong> 
+                <span class="col-6">Total</span> 
+                <strong class="col-6 text-end">₱ {{ number_format($collections['total_amount'], 2) ?? '0' }}</strong> 
             </li> 
         </ul> 
-        <form class="card p-2"> 
-            <div class="input-group"> 
-                <input type="text" class="form-control" placeholder="Promo code"> 
-                <button type="submit" class="btn btn-secondary">Redeem</button> 
-            </div> 
-        </form>
     </div> 
     <div class="col-md-7 col-lg-8"> 
         <h4 class="mb-3">Billing address</h4> 
@@ -105,12 +87,6 @@
                     <div class="invalid-feedback">
                         Please enter your shipping address.
                     </div> 
-                </div> 
-                <div class="col-12"> 
-                    <label for="address2" class="form-label">
-                        Address 2 <span class="text-body-secondary">(Optional)</span>
-                    </label> 
-                    <input type="text" class="form-control" id="address2" placeholder="Apartment or suite"> 
                 </div> 
                 <div class="col-md-5"> 
                     <label for="country" class="form-label">Country</label> 
@@ -202,8 +178,4 @@
         </form> 
     </div> 
 </div> 
-@endsection
-
-@section('footer')
-@include('includes.footer')
 @endsection

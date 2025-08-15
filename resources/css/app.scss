@@ -37,9 +37,12 @@ $body-color: $gray-900;
 $body-secondary-color: $gray-600;
 $body-tertiary-color: $gray-500;
 
-$link-color: $primary;
-$btn-color: $white;
+$link-color: $info;
+$btn-bg: $white;
+$btn-color: $primary;
 $border-color: $gray-300;
+
+@import "bootstrap/scss/bootstrap";
 
 .hover-shadow:hover {
     border: 1px solid $primary !important;
@@ -47,5 +50,42 @@ $border-color: $gray-300;
     transition: box-shadow 0.2s ease-in-out;
 }
 
-@import "bootstrap/scss/bootstrap";
-@import "bootstrap-icons/font/bootstrap-icons.css";
+.btn-primary {
+    background-color: $primary;
+    color: $white;
+}
+
+.btn-primary:hover {
+    filter: brightness(90%);
+    color: $white;
+}
+
+.btn-secondary {
+    background-color: $secondary;
+    color: $white;
+}
+
+.btn-secondary:hover {
+    filter: brightness(90%);
+    color: $white;
+}
+
+.btn-outline-primary {
+    background-color: $white;
+    color: $primary;
+}
+
+.btn-outline-primary:hover {
+    background-color: $primary;
+    color: $white;
+}
+
+.btn-outline-secondary {
+    background-color: $white;
+    color: $secondary;
+}
+
+.btn-outline-secondary:hover {
+    background-color: $secondary;
+    color: $white;
+}

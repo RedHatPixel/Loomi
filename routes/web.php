@@ -6,6 +6,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,8 @@ Route::prefix('/user')->middleware('auth')->controller(UserController::class)->g
     // User Views
     Route::get('/', 'index')->name('user.index');
     Route::get('/edit', 'edit')->name('user.edit');
+
+    Route::post('/edit/update', [ProfileController::class, 'storeOrUpdate'])->name('profile.update');
 });
 
 Route::middleware('auth')->group(function () {

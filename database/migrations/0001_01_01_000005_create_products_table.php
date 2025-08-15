@@ -44,7 +44,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->timestamps();
         });
 
         Schema::create('product_sales', function (Blueprint $table) {

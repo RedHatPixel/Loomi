@@ -2,7 +2,7 @@
     <td>
         <a href="{{ route('products.show', $product) }}" 
         class="d-flex align-items-center gap-4 text-decoration-none text-reset"
-        style="width: 300px;">
+        style="width: 280px;">
             @if($product->primaryImage)
                 <img src="{{ asset('storage/products' . $product->primaryImage->image_path) }}" 
                         alt="{{ $product->title }}" 

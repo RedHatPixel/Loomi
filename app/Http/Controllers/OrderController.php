@@ -15,12 +15,12 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::where('user_id', Auth::id());
-        return view('user.orders', compact('orders'));
+        return view('order.index', compact('orders'));
     }
 
     public function show(Order $order)
     {
-        return view('user.order', compact('order'));
+        return view('order.show', compact('order'));
     }
 
     public function store(Request $request)

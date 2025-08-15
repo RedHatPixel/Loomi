@@ -2,7 +2,7 @@
     <td>
         <a href="{{ route('products.show', $product) }}" 
         class="d-flex align-items-center gap-4 text-decoration-none text-reset"
-        style="width: 300px;">
+        style="width: 280px;">
             @if($product->primaryImage)
                 <img src="{{ asset('storage/products' . $product->primaryImage->image_path) }}" 
                         alt="{{ $product->title }}" 
@@ -29,7 +29,7 @@
             {{ $cart->quantity }}
         </div>
 
-        <div class="btn-group" id="quantity-form{{ $cart->id }}" style="display: none; width: 120px;">
+        <div class="btn-group" id="quantity-form{{ $cart->id }}" style="display: none; width: 130px;">
             <button type="button" class="btn btn-sm btn-outline-dark buttonLeft">
                 <i class="bi bi-dash"></i>
             </button>
@@ -49,7 +49,7 @@
                     quantity-form="#quantity-form{{ $cart->id }}"
                     update-form="#update-form{{ $cart->id }}"
                     quantity-content="#quantity-content{{ $cart->id }}">
-                <i class="bi bi-phone"></i> Edit
+                <i class="bi bi-pencil-square"></i> Edit
             </button>
             <form method="POST" action="{{ route('cart.update', $cart) }}" 
                 id="update-form{{ $cart->id }}" style="display: none">

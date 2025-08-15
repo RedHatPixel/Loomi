@@ -6,12 +6,12 @@
 @include('includes.profile')
 @endsection
 
-@section('content')
-<div class="my-4 border border-body-emphasis rounded-0">
-    
-</div>
+@section('sidebar')
+@include('includes.user')
 @endsection
 
-@section('footer')
-@include('includes.footer')
+@section('mainbar')
+<div class="card shadow-sm border-0">
+    
+</div>
 @endsection

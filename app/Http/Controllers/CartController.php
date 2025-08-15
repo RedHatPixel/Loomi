@@ -31,11 +31,34 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
-        Cart::create([
-            'user_id' => Auth::id(),
-            'product_id' => $request->product_id,
-            'quantity' => $request->quantity,
-        ]);
+        // Check if the product exists and is available
+        $product = Product::findOrFail($request->product_id);
+        $cart = Cart::where('user_id', Auth::id())
+            ->where('product_id', $product->id)
+            ->first();
+
+        // Check if the requested quantity exceeds available stock
+        $newQuantity = $request->quantity;
+        if ($cart) {
+            $newQuantity += $cart->quantity;
+        }
+
+        // Ensure the new quantity does not exceed available stock
+        if ($newQuantity > $product->quantity) {
+            return redirect()->back()
+                ->with('info', 'Requested quantity exceeds available stock.');
+        }
+
+        // If the product is already in the cart, update the quantity
+        if ($cart) {
+            $cart->update(['quantity' => $newQuantity]);
+        } else {
+            Cart::create([
+                'user_id' => Auth::id(),
+                'product_id' => $product->id,
+                'quantity' => $request->quantity,
+            ]);
+        }
 
         return redirect()->route('cart.index')
             ->with('success', 'Item added to cart.');
@@ -47,12 +70,22 @@ class CartController extends Controller
             'quantity' => 'sometimes|integer|min:1'
         ]);
 
-        if ($request->quantity == $cart->quantity) {
-            return redirect()->back()->with('info', 'No changes made to the cart item.');
+        // Validate the cart item exists
+        $product = $cart->product;
+        $newQuantity = $request->quantity ?? $cart->quantity;
+
+        if ($newQuantity > $product->quantity) {
+            return redirect()->back()
+                ->with('info', 'Requested quantity exceeds available stock.');
+        }
+
+        if ($newQuantity == $cart->quantity) {
+            return redirect()->back()
+                ->with('info', 'No changes made to the cart item.');
         }
 
         $cart->update([
-            'quantity' => $request->quantity ?? $cart->quantity,
+            'quantity' => $newQuantity,
         ]);
 
         return redirect()->back()->with('success', 'Cart updated.');
