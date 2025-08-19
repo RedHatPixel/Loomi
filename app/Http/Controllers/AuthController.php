@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password as PasswordFacade;
 use Illuminate\Validation\Rules\Password as PasswordRules;
@@ -50,6 +50,20 @@ class AuthController extends Controller
 
         if (Auth::attempt($validated, $remember)) {
             $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            if ($user->ban === 1) {
+                Auth::logout();
+                return redirect()->route('show.login')
+                    ->withErrors(['banned' => 'Your account has been banned. Please contact support.']);
+            }
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Welcome back, Admin!');
+            }
+
             return redirect()->route('home')
                 ->with('success', 'You have login successfully.');
         }

@@ -41,6 +41,7 @@ class AddressSeeder extends Seeder
             ],
         ];
 
+        // Integrate Data
         foreach ($data as $provinceName => $municipalities) {
             $province = Province::firstOrCreate(['name' => $provinceName]);
 

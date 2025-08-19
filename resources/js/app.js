@@ -2,7 +2,7 @@ import "./quantityInput.js";
 import "./cart.js";
 
 // Alert dismissal
-const alertEl = document.querySelector(".alert-dismissible");
+const alertEl = document.querySelector(".custom-alert");
 if (alertEl) {
     setTimeout(() => {
         const alert = bootstrap.Alert.getOrCreateInstance(alertEl);

@@ -1,29 +1,19 @@
 <tr>
-    <td>
-        <a href="{{ route('products.show', $product) }}" 
-        class="d-flex align-items-center gap-4 text-decoration-none text-reset"
-        style="width: 280px;">
-            @if($product->primaryImage)
-                <img src="{{ asset('storage/products' . $product->primaryImage->image_path) }}" 
-                        alt="{{ $product->title }}" 
-                        class="rounded-circle"
-                        style="width: 50px; height: 50px; object-fit: contain;">
-            @else
-                <img src="https://via.placeholder.com/60" 
-                        alt="No Image" 
-                        class="rounded-circle">
-            @endif
-            <span class="fw-semibold text-break fs-6 text-truncate text-capitalize text-ellipsis-2">
-                {{ $product->title }}
-            </span>
-        </a>
+    <td class="text-center" style="width: 80px;">
+        <img src="{{ $product->primaryImage 
+            ? asset('storage/' . $product->primaryImage->image_path) 
+            : asset('assets/images/placeholder.webp') }}" 
+            alt="{{ $product->title }}" 
+            class="img-fluid rounded" style="height: 60px; object-fit: contain;">
     </td>
-    <td>
-        <div class="text-break fs-6 fw-bold text-truncate text-success text-ellipsis-2" style="width: 100px;">
-            ₱ {{ number_format(($product->price * $cart->quantity), 2) ?? '0' }}
-        </div>
+    <td style="min-width: 300px;">
+        <strong>{{ ucfirst($product->title) }}</strong><br>
+        <small class="text-muted">{{ Str::limit($product->description, 50) }}</small>
     </td>
-    <td>
+    <td class="fw-semibold text-center text-success"  style="min-width: 150px;">
+        ₱{{ number_format($product->price * $cart->quantity, 2) }}
+    </td>
+    <td class="text-muted text-center" style="min-width: 150px;">
         <div class="text-break fs-6 fw-bold text-truncate text-ellipsis-2" 
             style="width: 100px;" id="quantity-content{{ $cart->id }}">
             {{ $cart->quantity }}
@@ -43,38 +33,37 @@
             </button>
         </div>
     </td>
-    <td>
-        <div class="d-flex gap-2" style="width: 250px;">
-            <button class="btn btn-sm btn-outline-success editButton"
-                    quantity-form="#quantity-form{{ $cart->id }}"
-                    update-form="#update-form{{ $cart->id }}"
-                    quantity-content="#quantity-content{{ $cart->id }}">
-                <i class="bi bi-pencil-square"></i> Edit
+    <td class="text-center" style="min-width: 150px;">
+        <button class="btn btn-sm btn-warning editButton"
+                quantity-form="#quantity-form{{ $cart->id }}"
+                update-form="#update-form{{ $cart->id }}"
+                quantity-content="#quantity-content{{ $cart->id }}">
+            <i class="bi bi-pencil-square"></i>
+        </button>
+        <form method="POST" action="{{ route('cart.update', $cart) }}"
+            id="update-form{{ $cart->id }}" style="display: none">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="quantity" class="hiddenInput{{ $cart->id }}">
+            <button type="submit" class="btn btn-sm btn-warning">
+                <i class="bi bi-bag"></i>
             </button>
-            <form method="POST" action="{{ route('cart.update', $cart) }}" 
-                id="update-form{{ $cart->id }}" style="display: none">
-                @csrf
-                @method('PUT')
-                <input type="hidden" name="quantity" class="hiddenInput{{ $cart->id }}">
-                <button type="submit" class="btn btn-sm btn-outline-success">
-                    <i class="bi bi-bag"></i> Update
-                </button>
-            </form>
-            <form method="POST" action="{{ route('checkout.store') }}">
-                @csrf
-                <input type="hidden" name="items[0][product_id]" value="{{ $cart->product->id }}">
-                <input type="hidden" name="items[0][quantity]" class="hiddenInput{{ $cart->id }}">
-                <button type="submit" class="btn btn-sm btn-outline-info">
-                    <i class="bi bi-bag"></i> Buy
-                </button>
-            </form>
-            <form method="POST" action="{{ route('cart.destroy', $cart) }}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-trash"></i> Remove
-                </button>
-            </form>
-        </div>
+        </form>
+        <form method="POST" action="{{ route('checkout.store') }}" class="d-inline">
+            @csrf
+            <input type="hidden" name="items[0][product_id]" value="{{ $cart->product->id }}">
+            <input type="hidden" name="items[0][quantity]" class="hiddenInput{{ $cart->id }}">
+            <input type="hidden" name="items[0][cart_id]" value="{{ $cart->id }}">
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="bi bi-bag"></i>
+            </button>
+        </form>
+        <form method="POST" action="{{ route('cart.destroy', $cart) }}" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash"></i>
+            </button>
+        </form>
     </td>
 </tr>

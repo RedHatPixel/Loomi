@@ -12,11 +12,11 @@ class WishlistController extends Controller
 
     public function index()
     {
-        $featuredProducts = Product::with('primaryImage')->with('userWishlist')
-            ->inRandomOrder()->take(12)->get();
+        $featuredProducts = Product::with('primaryImage')->with('yourWishlist')
+            ->inRandomOrder()->take(10)->get();
 
-        $lowestProducts = Product::with('primaryImage')->with('userWishlist')
-            ->orderBy('price', 'asc')->limit(12)->get();
+        $lowestProducts = Product::with('primaryImage')->with('yourWishlist')
+            ->orderBy('price', 'asc')->limit(10)->get();
 
         $wishlists = Wishlist::where('user_id', Auth::id())
             ->with(['product.primaryImage'])
@@ -27,6 +27,8 @@ class WishlistController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('store', Wishlist::class);
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
         ]);
@@ -41,12 +43,16 @@ class WishlistController extends Controller
 
     public function destroy(Wishlist $wishlist)
     {
+        $this->authorize('destroy', $wishlist);
+
         $wishlist->delete();
         return back()->with('success', 'Item removed from wishlist.');
     }
 
     public function clear()
     {
+        $this->authorize('clear', Wishlist::class);
+
         $userId = Auth::id();
         Wishlist::where('user_id', $userId)->delete();
 

@@ -1,52 +1,65 @@
-<a href="{{ route('products.show', ['product' => $product]) }}" class="col text-decoration-none text-reset ">
-    <div class="card shadow-sm border hover-shadow">
-        @if($product->primaryImage)
-            <img src="{{ asset('storage/products' . $product->primaryImage->image_path) }}"
-                alt="{{ $product->title }}"
-                class="card-img-top text-break border-light bg-light w-100" 
-                style="height: 200px; object-fit: contain;">
-        @else
-            <img src="/default-placeholder.jpg" alt="No image available">
-        @endif
+<a href="{{ route('products.show', ['product' => $product]) }}" 
+    class="col text-decoration-none text-reset">
 
-        <div class="card-body d-flex flex-column">
-            <h5 class="card-title text-break fs-6 text-truncate text-capitalize text-ellipsis-2">
-                {{ $product->title }}
-            </h5>
-            <p class="card-text text-break fs-6 text-truncate text-success text-ellipsis-2">
-                ₱ {{ number_format($product->price, 2) ?? '0' }}
-            </p>
-        </div>
-        <div class="mt-auto p-2">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group gap-1">
-                    <form method="POST" action="{{ route('cart.store') }}">
+    <div class="card h-100 border-0 rounded-3 shadow-sm product-card">
+        {{-- Product Image --}}
+        <div class="position-relative">
+            @if($product->primaryImage)
+                <img src="{{ asset('storage/' . $product->primaryImage->image_path) }}"
+                    alt="{{ $product->title }}"
+                    class="card-img-top p-3 bg-light rounded-top"
+                    style="height: 220px; object-fit: contain;">
+            @else
+                <img src="{{ asset('images/placeholder.png') }}" 
+                    alt="No image available"
+                    class="card-img-top p-3 bg-light rounded-top"
+                    style="height: 220px; object-fit: contain;">
+            @endif
+
+            {{-- Wishlist Button (Top Right) --}}
+            <div class="position-absolute top-0 end-0 m-2">
+                @empty($product->yourWishlist)
+                    <form method="POST" action="{{ route('wishlist.store') }}">
                         @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-cart"></i>
-                        </button>
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn btn-light btn-sm rounded-circle shadow-sm">
+                            <i class="bi bi-heart"></i>
+                        </button>
                     </form>
-                    @empty ($product->userWishlist)
-                        <form method="POST" action="{{ route('wishlist.store') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        </form>
-                    @else
-                        <form method="POST" action="{{ route('wishlist.destroy', $product->userWishlist) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-heart-fill"></i>
-                            </button>
-                        </form>
-                    @endif
-                </div>
-                <span class="lead fs-6">{{ $product->quantity }}</span>
+                @else
+                    <form method="POST" action="{{ route('wishlist.destroy', $product->yourWishlist) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm rounded-circle shadow-sm">
+                            <i class="bi bi-heart-fill text-white"></i>
+                        </button>
+                    </form>
+                @endempty
+            </div>
+        </div>
+
+        {{-- Card Body --}}
+        <div class="card-body d-flex flex-column">
+            <h6 class="card-title text-truncate fw-semibold text-capitalize">
+                {{ $product->title }}
+            </h6>
+            <p class="card-text text-success fw-bold mb-2">
+                ₱ {{ number_format($product->price, 2) }}
+            </p>
+
+            {{-- Stock --}}
+            <p class="text-muted small mb-3">Available: {{ $product->quantity }}</p>
+
+            {{-- Add to Cart --}}
+            <div class="mt-auto">
+                <form method="POST" action="{{ route('cart.store') }}">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-sm btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                        <small><i class="bi bi-cart"></i> Add to Cart</small>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

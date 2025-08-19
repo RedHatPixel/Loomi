@@ -19,7 +19,6 @@ class Product extends Model
         'description',
         'price',
         'quantity',
-        'is_active',
         'created_by'
     ];
 
@@ -63,13 +62,23 @@ class Product extends Model
         return $this->hasMany(Cart::class);
     }
 
-    public function userWishlist(): HasOne
+    public function yourWishlist(): HasOne
     {
         return $this->hasOne(Wishlist::class)->where('user_id', Auth::id());
     }
 
-    public function userCart(): HasOne
+    public function yourCart(): HasOne
     {
         return $this->hasOne(Cart::class)->where('user_id', Auth::id());
+    }
+
+    public function reduceStock(int $qty): bool
+    {
+        if ($this->quantity < $qty) {
+            return false;
+        }
+
+        $this->quantity -= $qty;
+        return $this->save();
     }
 }

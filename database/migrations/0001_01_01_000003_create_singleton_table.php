@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
+            $table->string('name')->unique();
         });
 
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('status');
+            $table->string('name')->unique();
         });
     }
 

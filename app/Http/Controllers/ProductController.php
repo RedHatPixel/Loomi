@@ -6,12 +6,10 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $validated = $request->validate([
@@ -33,7 +31,7 @@ class ProductController extends Controller
         // Filter product
         $products = Product::with([
             'primaryImage',
-            'userWishlist'
+            'yourWishlist'
         ])
             ->withAvg('ratings', 'stars')
             ->withSum('sales', 'quantity')
@@ -46,7 +44,7 @@ class ProductController extends Controller
             // Filter by category name
             ->when($category, function ($query) use ($category) {
                 $query->whereHas('categories', function ($q) use ($category) {
-                    $q->where('category', $category);
+                    $q->where('name', $category);
                 });
             })
 
@@ -92,24 +90,29 @@ class ProductController extends Controller
         // Get all available categories
         $categories = Category::all();
 
-        // Get random available products
-        $featuredProducts = Product::with(['primaryImage', 'userWishlist'])
-            ->inRandomOrder()->take(12)->get();
+        // Featured products (random picks)
+        $featuredProducts = Product::with(['primaryImage', 'yourWishlist'])
+            ->inRandomOrder()
+            ->take(10)
+            ->get();
 
-        return view('product.index', compact('products', 'featuredProducts', 'categories'));
+        // Trending products (based on total sales)
+        $trendingProducts = Product::with(['primaryImage', 'yourWishlist'])
+            ->withCount('sales')
+            ->orderByDesc('sales_count')
+            ->take(10)
+            ->get();
+
+        return view('product.index', compact('products', 'featuredProducts', 'trendingProducts', 'categories'));
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Product $product)
     {
         $product->load([
             'images',
             'primaryImage',
-            'userWishlist',
             'categories',
-            'creator',
+            'yourWishlist',
         ])
             ->loadAvg('ratings', 'stars')
             ->loadSum('sales', 'quantity');
@@ -119,73 +122,127 @@ class ProductController extends Controller
         return view('product.show', compact('product', 'ratings'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function random()
     {
-        return view('product.create');
+        $product = Product::inRandomOrder()->first();
+
+        if (!$product) {
+            return redirect()->route('products.index')
+                ->with('error', 'No products available right now.');
+        }
+
+        return redirect()->route('products.show', $product);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
+    public function create(Request $request)
+    {
+        $this->authorize('create', Product::class);
+
+        $categories = Category::all();
+        return view('admin.product.create', compact('categories'));
+    }
+
     public function edit(Product $product)
     {
-        $user = Auth::getUser();
+        $this->authorize('edit', Product::class);
 
         $product->load(['images', 'categories', 'creator']);
-        return view('product.edit', compact('product'));
+        $categories = Category::all();
+        return view('admin.product.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $this->authorize('store', Product::class);
+
+        $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string|min:20',
-            'price' => 'required|integer|min:0|max:99999',
-            'quantity' => 'required|integer|min:0|max:99999',
-            'is_active' => 'sometimes|boolean',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'categories' => 'required|array',
+            'categories.*' => 'exists:categories,id',
+            'images.*' => 'required|image|mimes:jpg,jpeg,png,gif,avif,webp|max:2048',
         ]);
 
-        $product = Product::create($validated);
+        $product = Product::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'created_by' => Auth::id()
+        ]);
 
-        return redirect()
-            ->route('products.show', $product)
-            ->with('success', 'Product was created successfully.');
+        $product->categories()->sync($request->categories);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('products', 'public');
+                $product->images()->create([
+                    'image_path' => $path,
+                    'is_primary' => $index === 0,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.products')
+            ->with('success', 'Product created successfully.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
-        $validated = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string|min:20',
-            'price' => 'sometimes|integer|min:0|max:99999',
-            'quantity' => 'sometimes|integer|min:0|max:99999',
-            'is_active' => 'sometimes|boolean'
+        $this->authorize('update', $product);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'categories' => 'required|array',
+            'categories.*' => 'exists:categories,id',
+            'images.*' => 'required|image|mimes:jpg,jpeg,png,gif,avif,webp|max:2048',
+            'remove_images.*' => 'sometimes|exists:product_images,id'
         ]);
 
-        $product->update($validated);
+        $product->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+        ]);
+
+        $product->categories()->sync($request->categories);
+
+        if ($request->filled('remove_images')) {
+            $ids = $request->remove_images;
+            foreach ($product->images()->whereIn('id', $ids)->get() as $image) {
+                $image->delete();
+            }
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('products', 'public');
+                $product->images()->create([
+                    'image_path' => $path,
+                    'is_primary' => $index === 0,
+                ]);
+            }
+        }
 
         return redirect()
-            ->route('products.show', $product)
+            ->route('admin.products')
             ->with('success', 'Product was updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
+
         $product->delete();
         return redirect()
-            ->route('products.index')
+            ->route('admin.products')
             ->with('success', 'Product was deleted successfully.');
     }
 }

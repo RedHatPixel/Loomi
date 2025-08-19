@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('provinces', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name');
         });
 
         Schema::create('municipalities', function (Blueprint $table) {
@@ -30,9 +30,12 @@ return new class extends Migration
 
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_id')->constrained('profiles')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('barangay_id')->constrained('barangays')->onDelete('cascade');
+            $table->string('house_number')->nullable();
+            $table->string('subdivision')->nullable();
             $table->string('street')->nullable();
+            $table->string('zip_code');
             $table->timestamps();
         });
     }

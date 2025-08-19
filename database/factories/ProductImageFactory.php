@@ -17,15 +17,18 @@ class ProductImageFactory extends Factory
      */
     public function definition(): array
     {
+        // Get all files from products directory
         $directory = storage_path('app/public/products');
         $files = File::files($directory);
+
+        // Pick a random file if available
         $randomFile = count($files) > 0
-            ? str_replace(storage_path('app/public/products'), '', fake()->randomElement($files)->getPathname())
+            ? 'products/' . basename($this->faker->randomElement($files)->getPathname())
             : null;
 
         return [
             'image_path' => $randomFile,
-            'is_primary' => fake()->boolean(30),
+            'is_primary' => false,
         ];
     }
 }

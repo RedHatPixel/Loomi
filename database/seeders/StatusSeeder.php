@@ -14,14 +14,16 @@ class StatusSeeder extends Seeder
     {
         $statuses = [
             'pending',
-            'packaging',
+            'processing',
             'shipped',
             'delivered',
-            'received'
+            'cancelled',
+            'denied',
+            'received',
         ];
 
         foreach ($statuses as $status) {
-            Status::create(['status' => $status]);
+            Status::create(['name' => $status]);
         }
     }
 }

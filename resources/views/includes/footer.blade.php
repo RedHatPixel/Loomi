@@ -1,105 +1,100 @@
-<div class="container">
-    <footer class="py-5">
-        <div class="row">
-            <div class="col-6 col-md-2 mb-3">
-                <h5>Loomi</h5>
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2">
-                        <a href="{{ route('home') }}" class="nav-link p-0 text-body-secondary">Home</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="{{ route('products.index') }}" class="nav-link p-0 text-body-secondary">Products</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link p-0 text-body-secondary">Pricing</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link p-0 text-body-secondary">FAQs</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link p-0 text-body-secondary">About</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-6 col-md-2 mb-3">
-                <h5>Sorting</h5>
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2">
-                        <a href="{{ 
-                                route('products.index', 
-                                array_merge(request()->all(), ['sort' => null])) 
-                                }}"
-                            class="nav-link p-0 text-body-secondary">Relevance</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="{{ 
-                                route('products.index', 
-                                array_merge(request()->all(), ['sort' => 'latest'])) 
-                                }}" 
-                                class="nav-link p-0 text-body-secondary">Latest</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="{{ 
-                            route('products.index', 
-                            array_merge(request()->all(), ['sort' => 'top_sales'])) 
-                            }}" 
-                            class="nav-link p-0 text-body-secondary">Top Sales</a>
-                        </li>
-                    <li class="nav-item mb-2">
-                        <a href="{{ 
-                            route('products.index', 
-                            array_merge(request()->all(), ['sort' => 'high_ratings'])) 
-                            }}" 
-                            class="nav-link p-0 text-body-secondary">High Ratings</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="{{ 
-                            route('products.index', 
-                            array_merge(request()->all(), ['sort' => 'price_low'])) 
-                            }}" 
-                            class="nav-link p-0 text-body-secondary">Price: Low to High</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="{{ 
-                            route('products.index', 
-                            array_merge(request()->all(), ['sort' => 'price_high'])) 
-                            }}"
-                            class="nav-link p-0 text-body-secondary">Price: High to Low</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            <div class="col-6 col-md-2 mb-3">
-                <h5>About</h5>
-                <ul class="nav flex-column">
-                </ul>
-            </div>
-            <div class="col-md-5 offset-md-1 mb-3">
-                <form>
-                    <h5>Subscribe to our newsletter</h5>
-                    <p>Monthly digest of what's new and exciting from us.</p>
-                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-                        <label for="newsletter1" class="visually-hidden">Email address</label>
-                        <input id="newsletter1" type="email" class="form-control" placeholder="Email address">
-                        <button class="btn btn-primary" type="button">Subscribe</button>
-                    </div>
-                </form>
-            </div>
+<footer class="py-5 px-3">
+    <div class="row">
+        <!-- Brand / About -->
+        <div class="col-6 col-md-3 mb-3">
+            <h5 class="fw-bold text-primary">Loomi</h5>
+            <p class="text-muted small">
+                Loomi is your trusted destination for quality products at the best prices. 
+                Shop with confidence and enjoy a seamless online shopping experience.
+            </p>
         </div>
-        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-            <p>© 2025 Company, Inc. All rights reserved.</p>
-            <ul class="list-unstyled d-flex">
-                <li class="ms-3">
-                    <a class="link-body-emphasis" href="https://www.instagram.com/" aria-label="Instagram">
-                        <i class="bi bi-instagram"></i>
-                    </a>
+
+        <!-- Quick Links -->
+        <div class="col-6 col-md-2 mb-3">
+            <h6 class="fw-bold">Quick Links</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a href="{{ route('home') }}" class="nav-link p-0 text-muted">Home</a>
                 </li>
-                <li class="ms-3">
-                    <a class="link-body-emphasis" href="https://www.facebook.com/" aria-label="Facebook">
-                        <i class="bi bi-facebook"></i>
-                    </a>
+                <li class="nav-item mb-2">
+                    <a href="{{ route('products.index') }}" class="nav-link p-0 text-muted">Shop</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link p-0 text-muted">About Us</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link p-0 text-muted">Contact</a>
                 </li>
             </ul>
         </div>
-    </footer>
-</div>
+
+        <!-- Customer Service -->
+        <div class="col-6 col-md-3 mb-3">
+            <h6 class="fw-bold">Customer Service</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link p-0 text-muted">FAQs</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link p-0 text-muted">Shipping & Returns</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link p-0 text-muted">Track Order</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link p-0 text-muted">Support</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Sorting / Explore -->
+        <div class="col-6 col-md-2 mb-3">
+            <h6 class="fw-bold">Explore</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a href="{{ route('products.index', array_merge(request()->all(), ['sort' => 'latest'])) }}" 
+                        class="nav-link p-0 text-muted">Latest Products</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="{{ route('products.index', array_merge(request()->all(), ['sort' => 'top_sales'])) }}" 
+                        class="nav-link p-0 text-muted">Best Sellers</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="{{ route('products.index', array_merge(request()->all(), ['sort' => 'high_ratings'])) }}" 
+                        class="nav-link p-0 text-muted">Top Rated</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="{{ route('products.index', array_merge(request()->all(), ['sort' => 'price_low'])) }}" 
+                        class="nav-link p-0 text-muted">Budget Finds</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center py-4 mt-4 border-top">
+        <p class="mb-0 text-muted small">© 2025 Loomi. All rights reserved.</p>
+        <ul class="list-unstyled d-flex mb-0">
+            <li class="ms-3">
+                <a class="text-muted fs-5" href="https://www.instagram.com/" aria-label="Instagram">
+                    <i class="bi bi-instagram"></i>
+                </a>
+            </li>
+            <li class="ms-3">
+                <a class="text-muted fs-5" href="https://www.facebook.com/" aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+            </li>
+            <li class="ms-3">
+                <a class="text-muted fs-5" href="https://twitter.com/" aria-label="Twitter">
+                    <i class="bi bi-twitter"></i>
+                </a>
+            </li>
+            <li class="ms-3">
+                <a class="text-muted fs-5" href="https://www.youtube.com/" aria-label="YouTube">
+                    <i class="bi bi-youtube"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</footer>

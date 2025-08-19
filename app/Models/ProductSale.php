@@ -12,9 +12,13 @@ class ProductSale extends Model
 
     protected $fillable = [
         'product_id',
-        'buyer_id',
         'quantity',
-        'price_at_sale'
+        'price_at_sale',
+        'purchase_by',
+    ];
+
+    protected $casts = [
+        'sold_at' => 'datetime',
     ];
 
     public $timestamps = false;
@@ -26,6 +30,6 @@ class ProductSale extends Model
 
     public function buyer(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'purchase_by');
     }
 }

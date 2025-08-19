@@ -19,10 +19,17 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::all();
+        // Get only admins
+        $admins = User::where('role', 'admin')->get();
 
-        Product::factory()->count(100)->make()->each(function ($product) use ($users) {
-            $product->created_by = $users->random()->id;
+        if ($admins->isEmpty()) {
+            $this->command->warn("⚠️ No admin users found. Please seed at least one admin first.");
+            return;
+        }
+
+        Product::factory()->count(100)->make()->each(function ($product) use ($admins) {
+            // Only admins can be product creators
+            $product->created_by = $admins->random()->id;
             $product->save();
 
             // Product Images
@@ -37,16 +44,16 @@ class ProductSeeder extends Seeder
             $product->categories()->attach($categoryIds);
 
             // Product Ratings
-            $ratingUsers = $users->random(rand(1, 10));
+            $ratingUsers = User::where('role', 'user')->inRandomOrder()->take(rand(1, 10))->get();
             foreach ($ratingUsers as $user) {
-                $rating = ProductRating::factory()->make(['user_id' => $user->id]);
+                $rating = ProductRating::factory()->make(['rated_by' => $user->id]);
                 $product->ratings()->save($rating);
             }
 
             // Product Sales
-            $salesUsers = $users->random(rand(1, 10));
+            $salesUsers = User::where('role', 'user')->inRandomOrder()->take(rand(1, 10))->get();
             foreach ($salesUsers as $user) {
-                $sale = ProductSale::factory()->make(['buyer_id' => $user->id]);
+                $sale = ProductSale::factory()->make(['purchase_by' => $user->id]);
                 $product->sales()->save($sale);
             }
         });

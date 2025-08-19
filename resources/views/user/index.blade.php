@@ -11,44 +11,66 @@
 @endsection
 
 @section('mainbar')
-<div class="card shadow-sm border-0 my-1">
-    <div class="card-header bg-white">
-        <h5 class="mb-0">Contact</h5>
-    </div>
-    <div class="card-body">
-        
-        @if(Auth::user()->profile && Auth::user()->profile->contact_number ?? false)
-            <p class="mb-1">{{ Auth::user()->profile->contact_number ?? '' }}</p>
-        @else
-            <p class="text-muted mb-1">No contact information.</p>
-        @endif
-    </div>
-</div>
+<div class="container-fluid px-0">
 
-<div class="card shadow-sm border-0 my-1">
-    <div class="card-header bg-white d-flex justify-content-between">
-        <h5 class="mb-0">Address</h5>
-        <a href="">create</a>
+    {{-- Contact Card --}}
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-header bg-light d-flex align-items-center gap-2">
+            <i class="bi bi-telephone text-primary"></i>
+            <h5 class="mb-0">Contact</h5>
+        </div>
+        <div class="card-body">
+            @if(Auth::user()->profile && Auth::user()->profile->contact_number ?? false)
+                <p class="mb-0 fs-6">{{ Auth::user()->profile->contact_number }}</p>
+            @else
+                <p class="text-muted mb-0">No contact information available.</p>
+            @endif
+        </div>
     </div>
-    <div class="card-body">
-        @if(Auth::user()->profile && Auth::user()->profile->addresses->count())
-            <ul class="list-group list-group-flush">
-                @foreach(Auth::user()->profile->addresses as $address)
-                    <li class="list-group-item px-0 py-2">
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold">{{ $address->street ?? '' }}</span>
-                            <span class="text-muted small">
-                                {{ $address->barangay->name ?? '' }},
-                                {{ $address->barangay->municipality->name ?? '' }},
-                                {{ $address->barangay->municipality->province->name ?? '' }}
-                            </span>
-                        </div>
-                    </li>
-                @endforeach
-            </ul>
-        @else
-            <p class="text-muted">No address found.</p>
-        @endif
+
+    {{-- Address Card --}}
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-geo-alt text-primary"></i>
+                <h5 class="mb-0">Address</h5>
+            </div>
+            <a href="{{ route('address.create') }}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-plus-circle"></i> Add New
+            </a>
+        </div>
+        <div class="card-body">
+            @if(Auth::user()->addresses->count())
+                <ul class="list-group list-group-flush">
+                    @foreach(Auth::user()->addresses as $address)
+                        <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-3 px-0 py-3 border-0 border-bottom">
+                            <div class="d-flex flex-column">
+                                <span class="fw-semibold">{{ $address->house_number ?? '' }} {{ $address->street ?? '' }}</span>
+                                <small class="text-muted">
+                                    {{ $address->subdivision ?? '' }} 
+                                    {{ $address->barangay->name ?? '' }},
+                                    {{ $address->barangay->municipality->name ?? '' }},
+                                    {{ $address->barangay->municipality->province->name ?? '' }}  
+                                    {{ $address->zip_code ?? '' }}
+                                </small>
+                            </div>
+                            <form action="{{ route('address.destroy', $address) }}" method="POST" class="m-0">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-muted mb-0">No addresses found. Add one to make shopping easier.</p>
+            @endif
+        </div>
     </div>
 </div>
+@endsection
+
+@section('content')
 @endsection

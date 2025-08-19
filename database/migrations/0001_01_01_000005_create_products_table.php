@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('title', 100);
             $table->text('description');
             $table->decimal('price', 10, 2);
-            $table->unsignedInteger('quantity')->default(0);
-            $table->boolean('is_active')->default(false);
+            $table->unsignedInteger('quantity')->default(1);
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -28,16 +27,6 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->string('image_path');
             $table->boolean('is_primary')->default(false);
-            $table->timestamps();
-        });
-
-        Schema::create('product_ratings', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->tinyInteger('stars')->unsigned();
-            $table->text('comment')->nullable();
-            $table->timestamps();
         });
 
         Schema::create('product_categories', function (Blueprint $table) {
@@ -46,12 +35,21 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
         });
 
+        Schema::create('product_ratings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->tinyInteger('stars')->unsigned();
+            $table->text('comment')->nullable();
+            $table->foreignId('rated_by')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
+        });
+
         Schema::create('product_sales', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('buyer_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedInteger('quantity');
             $table->decimal('price_at_sale', 10, 2);
+            $table->unsignedInteger('quantity');
+            $table->foreignId('purchase_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('sold_at')->useCurrent();
         });
     }

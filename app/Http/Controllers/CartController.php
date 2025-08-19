@@ -11,11 +11,11 @@ class CartController extends Controller
 {
     public function index()
     {
-        $featuredProducts = Product::with('primaryImage')->with('userWishlist')
-            ->inRandomOrder()->take(12)->get();
+        $featuredProducts = Product::with('primaryImage')->with('yourWishlist')
+            ->inRandomOrder()->take(10)->get();
 
-        $lowestProducts = Product::with('primaryImage')->with('userWishlist')
-            ->orderBy('price', 'asc')->limit(12)->get();
+        $lowestProducts = Product::with('primaryImage')->with('yourWishlist')
+            ->orderBy('price', 'asc')->limit(10)->get();
 
         $carts = Cart::where('user_id', Auth::id())
             ->with(['product.primaryImage'])
@@ -26,6 +26,8 @@ class CartController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('store', Cart::class);
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
@@ -66,6 +68,8 @@ class CartController extends Controller
 
     public function update(Request $request, Cart $cart)
     {
+        $this->authorize('update', $cart);
+
         $request->validate([
             'quantity' => 'sometimes|integer|min:1'
         ]);
@@ -93,15 +97,18 @@ class CartController extends Controller
 
     public function destroy(Cart $cart)
     {
+        $this->authorize('destroy', $cart);
+
         $cart->delete();
         return redirect()->back()->with('success', 'Item removed from cart.');
     }
 
     public function clear()
     {
+        $this->authorize('clear', Cart::class);
+
         $userId = Auth::id();
         Cart::where('user_id', $userId)->delete();
-
         return redirect()->back()->with('success', 'All cart items deleted.');
     }
 }

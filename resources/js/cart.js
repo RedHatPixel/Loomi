@@ -24,15 +24,15 @@ document.querySelectorAll(".editButton").forEach(function (button) {
             updateForm.style.display === "none" ||
             updateForm.style.display === ""
         ) {
-            updateForm.style.display = "block";
+            updateForm.style.display = "inline-block";
             quantityForm.style.display = "flex";
             quantityContent.style.display = "none";
             button.style.display = "none";
         } else {
             updateForm.style.display = "none";
             quantityForm.style.display = "none";
-            quantityContent.style.display = "block";
-            button.style.display = "block";
+            quantityContent.style.display = "inline-block";
+            button.style.display = "inline-block";
         }
     });
 });

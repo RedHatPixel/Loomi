@@ -1,91 +1,90 @@
-$blue: #0d6efd;
-$indigo: #6610f2;
-$purple: #6f42c1;
-$pink: #d63384;
-$red: #dc3545;
-$orange: #fd7e14;
-$yellow: #ffc107;
-$green: #198754;
-$teal: #20c997;
-$cyan: #0dcaf0;
+@use "variables" as *;
 
-$primary: #ff7d26;
-$secondary: #f26100;
+@use "bootstrap/scss/bootstrap" with (
+    $primary: $primary,
+    $secondary: $secondary,
+    $font-family-sans-serif: $font-family-sans-serif
+);
 
-$success: #28a745;
-$warning: #ffc107;
-$danger: #dc3545;
-$info: #17a2b8;
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
-$light: #f8f9fa;
-$dark: #3a4249;
-
-$white: #fff;
-$gray-100: #f8f9fa;
-$gray-200: #e9ecef;
-$gray-300: #dee2e6;
-$gray-400: #ced4da;
-$gray-500: #adb5bd;
-$gray-600: #6c757d;
-$gray-700: #495057;
-$gray-800: #343a40;
-$gray-900: #212529;
-$black: #000;
-
-$body-bg: $white;
-$body-color: $gray-900;
-$body-secondary-color: $gray-600;
-$body-tertiary-color: $gray-500;
-
-$link-color: $info;
-$btn-bg: $white;
-$btn-color: $primary;
-$border-color: $gray-300;
-
-@import "bootstrap/scss/bootstrap";
-
-.hover-shadow:hover {
-    border: 1px solid $primary !important;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.2s ease-in-out;
+// PRODUCT DESIGN
+.product-card {
+    transition: all 0.25s ease-in-out;
+}
+.product-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(13, 110, 253, 0.3);
 }
 
-.btn-primary {
-    background-color: $primary;
-    color: $white;
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+    transform: scale(1.05);
 }
 
-.btn-primary:hover {
-    filter: brightness(90%);
-    color: $white;
+// STAR DESIGN
+.star-rating {
+    direction: ltr;
+    display: inline-flex;
+    gap: 0.25rem;
 }
 
-.btn-secondary {
-    background-color: $secondary;
-    color: $white;
+.star-rating input[type="radio"] {
+    display: none;
 }
 
-.btn-secondary:hover {
-    filter: brightness(90%);
-    color: $white;
+.star-rating label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-.btn-outline-primary {
-    background-color: $white;
-    color: $primary;
+.star-rating input[type="radio"]:checked ~ label i,
+.star-rating label:hover i,
+.star-rating label:hover ~ label i {
+    color: #ffc107;
 }
 
-.btn-outline-primary:hover {
-    background-color: $primary;
-    color: $white;
+// ALERT DESIGN
+.custom-alert {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1100;
+    max-width: 420px;
+    width: calc(100% - 2rem);
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    border-left: 6px solid;
+    animation: slideIn 0.4s ease-out;
 }
 
-.btn-outline-secondary {
-    background-color: $white;
-    color: $secondary;
+/* Smooth entry */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.btn-outline-secondary:hover {
-    background-color: $secondary;
-    color: $white;
+// ACCORDION
+.list-group-item-action {
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+}
+.list-group-item-action:hover {
+    background-color: #f0f8ff;
+    transform: translateX(4px);
+}
+.accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
 }

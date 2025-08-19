@@ -11,6 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('wishlists', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->timestamps();
+        });
+
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
@@ -19,17 +26,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('wishlists', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->timestamps();
-        });
-
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('status_id')->constrained('statuses')->onDelete('cascade');
+            $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
+            $table->text('address');
+            $table->string('name');
+            $table->string('contact_number', 20);
+            $table->text('notes')->nullable();
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
         });
@@ -49,8 +53,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cart');
         Schema::dropIfExists('wishlist');
+        Schema::dropIfExists('cart');
         Schema::dropIfExists('orders');
         Schema::dropIfExists('order_items');
     }

@@ -12,18 +12,18 @@ class ProductRating extends Model
 
     protected $fillable = [
         'product_id',
-        'user_id',
         'stars',
-        'comment'
+        'comment',
+        'rated_by'
     ];
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'rated_by');
     }
 }

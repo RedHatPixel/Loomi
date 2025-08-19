@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['user', 'admin'])->default('user');
+            $table->boolean('ban')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -37,6 +39,16 @@ return new class extends Migration
         });
 
         Schema::create('profiles', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('contact_number', 20)->nullable();
+            $table->string('avatar')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('icon', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('first_name')->nullable();

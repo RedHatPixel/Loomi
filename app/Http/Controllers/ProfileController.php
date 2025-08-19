@@ -21,8 +21,10 @@ class ProfileController extends Controller
         }
 
         if ($profile) {
+            $this->authorize('update', $profile);
             $profile->update($data);
         } else {
+            $this->authorize('store', Profile::class);
             $profile = Profile::create(array_merge($data, ['user_id' => $user->id]));
         }
 

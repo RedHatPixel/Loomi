@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -11,10 +12,20 @@ class CheckoutController extends Controller
     {
         $collections = session('collections');
         if (!$collections) {
-            return redirect()->route('user.index')
+            return redirect()->back()
                 ->withErrors('You are missing a product to order');
         }
-        return view('checkout', compact('collections'));
+
+        $addresses = Auth::user()->addresses;
+
+        if ($addresses->isEmpty()) {
+            session(['after_address_redirect' => route('checkout.index')]);
+
+            return redirect()->route('address.create')
+                ->with('info', 'Create an address before you order');
+        }
+
+        return view('checkout', compact('collections', 'addresses'));
     }
 
     public function store(Request $request)
@@ -23,6 +34,7 @@ class CheckoutController extends Controller
             'items' => 'required|array',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.cart_id' => 'nullable|exists:carts,id'
         ]);
 
         $collections = [];
@@ -34,7 +46,8 @@ class CheckoutController extends Controller
                 $collections['products'][] = [
                     'product' => $product,
                     'quantity' => $item['quantity'],
-                    'total_price' => $product->price * $item['quantity']
+                    'total_price' => $product->price * $item['quantity'],
+                    'cart_id' => $item['cart_id'] ?? null
                 ];
                 $total_amount += $product->price * $item['quantity'];
                 $total_product += 1;

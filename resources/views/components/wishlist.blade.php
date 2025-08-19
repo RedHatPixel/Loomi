@@ -1,37 +1,39 @@
 <tr>
-    <td>
-        <a href="{{ route('products.show', $product) }}" 
-        class="d-flex align-items-center gap-4 text-decoration-none text-reset"
-        style="width: 280px;">
-            @if($product->primaryImage)
-                <img src="{{ asset('storage/products' . $product->primaryImage->image_path) }}" 
-                        alt="{{ $product->title }}" 
-                        class="rounded-circle"
-                        style="width: 50px; height: 50px; object-fit: contain;">
-            @else
-                <img src="https://via.placeholder.com/60" 
-                        alt="No Image" 
-                        class="rounded-circle">
-            @endif
-            <span class="fw-semibold text-break fs-6 text-truncate text-capitalize text-ellipsis-2">
-                {{ $product->title }}
-            </span>
+    <td class="text-center" style="width: 80px;">
+        <img src="{{ $product->primaryImage 
+            ? asset('storage/' . $product->primaryImage->image_path) 
+            : asset('assets/images/placeholder.webp') }}" 
+            alt="{{ $product->title }}" 
+            class="img-fluid rounded" style="height: 60px; object-fit: contain;">
+    </td>
+    <td style="min-width: 300px;">
+        <strong>{{ ucfirst($product->title) }}</strong><br>
+        <small class="text-muted">{{ Str::limit($product->description, 50) }}</small>
+    </td>
+    <td class="fw-semibold text-center text-success"  style="min-width: 150px;">
+        ₱{{ number_format($product->price, 2) }}
+    </td>
+    <td class="text-muted text-center" style="min-width: 150px;">
+        {{ $wishlist->created_at->format('M d, Y') }}
+    </td>
+    <td class="text-center" style="min-width: 150px;">
+        <form action="{{ route('wishlist.destroy', $wishlist) }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger" title="Remove">
+                <i class="bi bi-heartbreak"></i>
+            </button>
+        </form>
+        <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-info" title="View">
+            <i class="bi bi-search"></i>
         </a>
-    </td>
-    <td>
-        <div class="text-break fs-6 fw-bold text-truncate text-success text-ellipsis-2" style="width: 100px;">
-            ₱ {{ number_format($product->price, 2) ?? '0' }}
-        </div>
-    </td>
-    <td>
-        <div class="d-flex gap-2" style="width: 100px;">
-            <form method="POST" action="{{ route('wishlist.destroy', $wishlist) }}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-trash"></i> Remove
-                </button>
-            </form>
-        </div>
+        <form action="{{ route('cart.store') }}" method="POST" class="d-inline">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn btn-sm btn-success" title="Move to Cart">
+                <i class="bi bi-cart-plus"></i>
+            </button>
+        </form>
     </td>
 </tr>

@@ -15,6 +15,7 @@ class ProductImage extends Model
         'image_path',
         'is_primary'
     ];
+    public $timestamps = false;
 
     public function product(): BelongsTo
     {

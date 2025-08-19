@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class WishlistPolicy
 {
-    public function create(User $user): bool
+    public function store(User $user): bool
     {
         if (Auth::guest()) {
             return false;
@@ -17,7 +17,7 @@ class WishlistPolicy
         return $user->id === Auth::id();
     }
 
-    public function delete(User $user, Wishlist $wishlist): bool
+    public function destroy(User $user, Wishlist $wishlist): bool
     {
         return $wishlist->user_id === $user->id;
     }

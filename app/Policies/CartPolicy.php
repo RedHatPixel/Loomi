@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CartPolicy
 {
-    public function create(User $user): bool
+    public function store(User $user): bool
     {
         if (Auth::guest()) {
             return false;
@@ -22,7 +22,7 @@ class CartPolicy
         return $cart->user_id === $user->id;
     }
 
-    public function delete(User $user, Cart $cart): bool
+    public function destroy(User $user, Cart $cart): bool
     {
         return $cart->user_id === $user->id;
     }
