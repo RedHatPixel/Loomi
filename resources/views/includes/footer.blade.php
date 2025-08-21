@@ -20,29 +20,10 @@
                     <a href="{{ route('products.index') }}" class="nav-link p-0 text-muted">Shop</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="#" class="nav-link p-0 text-muted">About Us</a>
+                    <a href="{{ route('wishlist.index') }}" class="nav-link p-0 text-muted">Wishlist</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="#" class="nav-link p-0 text-muted">Contact</a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Customer Service -->
-        <div class="col-6 col-md-3 mb-3">
-            <h6 class="fw-bold">Customer Service</h6>
-            <ul class="nav flex-column">
-                <li class="nav-item mb-2">
-                    <a href="#" class="nav-link p-0 text-muted">FAQs</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a href="#" class="nav-link p-0 text-muted">Shipping & Returns</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a href="#" class="nav-link p-0 text-muted">Track Order</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a href="#" class="nav-link p-0 text-muted">Support</a>
+                    <a href="{{ route('cart.index') }}" class="nav-link p-0 text-muted">Cart</a>
                 </li>
             </ul>
         </div>

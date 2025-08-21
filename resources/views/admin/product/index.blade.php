@@ -75,7 +75,7 @@
                     <tr>
                         <td>{{ $product->id ?? '0' }}</td>
                         <td style="min-width: 250px;" class="fw-semibold">{{ $product->title ?? 'No Title' }}</td>
-                        <td style="min-width: 120px;" class="text-success">
+                        <td style="min-width: 120px;" class="text-success align-middle">
                             ₱ {{ number_format($product->price ?? 0, 2) }}
                         </td>
                         <td style="min-width: 100px;">

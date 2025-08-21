@@ -14,7 +14,6 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             'Pants',
-            'Shoes',
             'T-Shirt',
             'Jackets',
             'Shorts',
@@ -22,7 +21,6 @@ class CategorySeeder extends Seeder
             'Hats',
             'Dresses',
             'Uniform',
-            'Socks',
         ];
 
         foreach ($categories as $category) {
