@@ -1,58 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Loomi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Loomi is a multi-vendor e-commerce platform built for independent clothing brands. It lets sellers open their own storefronts and sell directly to customers, while giving the platform owner full administrative control through a dedicated admin panel and an official **Loomi Sellers** storefront.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Every registered user starts as a customer. Any customer can open one or more stores and become a seller, with each store fully scoped to its owner. Admins operate independently of the normal registration flow and have full access to all platform data, in addition to running the official Loomi Sellers brand.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Core Capabilities
 
-## Learning Laravel
+- **Customer storefront** — browse products, search, manage a cart, check out, and track orders
+- **Seller dashboard** — create and manage stores, list products, fulfill orders
+- **Admin panel** — full platform visibility and control, plus management of the Loomi Sellers storefront
+- **Multi-store support** — a single user account can own and manage multiple stores
+- **Role-based access** — Customer, Seller, and Admin roles with strict data scoping
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tech Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Layer | Technology |
+|---|---|
+| Backend | Laravel 13 |
+| Frontend bridge | Inertia.js v2 |
+| Frontend | React 18 + TypeScript |
+| Styling | TailwindCSS v3 |
+| UI primitives | Headless UI |
+| Database | MySQL |
+| Bundler | Vite |
+| Routing helper | Ziggy (`route()` in JS) |
+| Auth scaffolding | Laravel Breeze |
 
-## Agentic Development
+This is an **Inertia.js application**, not a separate REST API + SPA. Pages receive data as server-rendered props, forms are submitted with Inertia's `useForm`, and navigation uses Inertia's `<Link>` and `router` — there's no client-side data fetching for initial page loads.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+## Project Structure
 
-php artisan boost:install
+```
+app/
+  Http/Controllers/
+    Admin/
+    Auth/
+    Customer/
+    Seller/
+  Models/
+  Policies/
+  Services/
+database/
+  migrations/
+  seeders/
+  factories/
+routes/
+  web.php
+  auth.php
+resources/
+  js/
+    Components/
+    Hooks/
+    Layouts/
+    Pages/
+    Store/
+    Types/
+    Utils/
+    Constants/
+  css/
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## User Roles
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Role | Description |
+|---|---|
+| **Customer** | Default for every registered account. Browses the marketplace, manages cart and orders. |
+| **Seller** | A customer who has created at least one store. Manages products and fulfillment for their own store(s) only. |
+| **Admin** | Created outside normal registration. Full read/write access to all data, plus control of the Loomi Sellers storefront. |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Getting Started
 
-## Security Vulnerabilities
+### Requirements
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- PHP 8.2+
+- Composer
+- Node.js 18+ and npm
+- MySQL
+- A local PHP environment (e.g. XAMPP, Laravel Herd, Valet)
+
+### Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/RedHatPixel/Loomi.git
+cd Loomi
+
+# Install PHP dependencies
+composer install
+
+# Install JS dependencies
+npm install
+
+# Copy environment file and configure database credentials
+cp .env.example .env
+php artisan key:generate
+```
+
+Update `.env` with your MySQL connection details, then run:
+
+```bash
+# Run migrations and seeders
+php artisan migrate --seed
+
+# Link public storage (for product images)
+php artisan storage:link
+```
+
+### Running Locally
+
+```bash
+# Start the Laravel dev server
+php artisan serve
+
+# In a separate terminal, start Vite for asset compilation
+npm run dev
+```
+
+Visit `http://localhost:8000` in your browser.
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the [MIT License](LICENSE).
