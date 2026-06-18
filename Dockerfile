@@ -20,7 +20,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # create SQL lite
-RUN touch/var/www/database/database.sqlite
+RUN touch /var/www/database/database.sqlite
 
 # Copy app files
 COPY . .
