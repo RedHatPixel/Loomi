@@ -1,39 +1,45 @@
 # Stage 1 - Build Frontend (Vite)
-FROM node:18 AS frontend
+FROM node:20 AS frontend
+
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 
 # Stage 2 - Backend (Laravel + PHP + Composer)
-FROM php:8.2-fpm AS backend
+FROM php:8.4-fpm AS backend
 
-# Install system dependencies
+# Install system dependencies & PHP extensions
 RUN apt-get update && apt-get install -y \
     git curl unzip libpq-dev libonig-dev libzip-dev zip \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip
+    && docker-php-ext-install pdo pdo_mysql mbstring zip bcmath
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Copy app files
+# Copy app files first
 COPY . .
 
-# create SQL lite
-RUN touch /var/www/database/database.sqlite
+# Create storage link & SQLite database
+RUN mkdir -p /var/www/database \
+    && touch /var/www/database/database.sqlite \
+    && php artisan storage:link
 
 # Copy built frontend from Stage 1
 COPY --from=frontend /app/public/build ./public/build
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies (with lock file verification)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Laravel setup
-RUN php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan view:clear
+# Production optimization (replaces individual clear commands)
+RUN php artisan optimize
+
+# Set proper permissions for Laravel
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
+
+USER www-data
 
 CMD ["php-fpm"]
