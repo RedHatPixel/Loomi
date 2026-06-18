@@ -22,6 +22,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN mkdir -p /var/www/database \
     && touch /var/www/database/database.sqlite \
     && php artisan storage:link \
+    && php artisan migrate --force \
     && php artisan optimize
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
