@@ -34,6 +34,11 @@ RUN mkdir -p /var/www/database \
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
 
-USER www-data
+# Nginx config — listens on Render's $PORT
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Start both FPM and Nginx
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 CMD ["php-fpm"]
