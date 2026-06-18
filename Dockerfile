@@ -19,11 +19,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# create SQL lite
-RUN touch /var/www/database/database.sqlite
-
 # Copy app files
 COPY . .
+
+# create SQL lite
+RUN touch /var/www/database/database.sqlite
 
 # Copy built frontend from Stage 1
 COPY --from=frontend /app/public/build ./public/build
