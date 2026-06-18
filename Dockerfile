@@ -23,7 +23,9 @@ RUN mkdir -p /var/www/database \
     && touch /var/www/database/database.sqlite \
     && php artisan storage:link \
     && php artisan migrate --force \
-    && php artisan optimize
+    && php artisan view:cache \
+    && php artisan route:cache \
+    && php artisan event:cache
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
 
