@@ -10,7 +10,6 @@ interface Props {
 export default function Featured({ featuredStores }: Props) {
     return (
         <>
-            {featuredStores.length}
             {featuredStores.length > 0 && (
                 <Reveal>
                     <section>
